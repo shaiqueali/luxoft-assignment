@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
@@ -52,11 +53,12 @@ public class WordUtilsTest {
         writeResult(wordCountMap);
 
         Stream<String> rows = Files.lines(Paths.get(OUT_FILE));
-        int rowCount = (int) rows
+        List<String[]> records = rows
                 .map(x -> x.split("->"))
                 .filter(x -> x.length == 2)
-                .count();
-        assertEquals(3, rowCount);
+                .collect(Collectors.toList());
+
+        assertEquals("2.5", records.get(0)[1].trim());
     }
 
 }

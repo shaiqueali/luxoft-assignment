@@ -1,6 +1,5 @@
 package technical.task.luxoft;
 
-import technical.task.luxoft.constant.WordUtils;
 import technical.task.luxoft.model.WordStatistics;
 import technical.task.luxoft.model.WordSummary;
 
@@ -8,6 +7,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
+import static technical.task.luxoft.constant.WordUtils.vowelsInWord;
 
 /**
  * 1 - Get list of clean words
@@ -18,11 +19,19 @@ import java.util.Map;
 public class CalculateAverageNumberOfVowels {
 
     private final Map<WordSummary, WordStatistics> wordCountMap = new HashMap<>();
+    private final Map<String, List<Character>> wordMap = new HashMap<>();
 
     public Map<WordSummary, WordStatistics> averageNumberOfVowelsInWords(final List<String> words) {
         words.forEach(word -> {
-            List<Character> vowels = WordUtils.vowelsInWord(word);
-            buildWordMap(word.length(), vowels.size(), new HashSet<>(vowels).toString());
+            // check same words
+            if (wordMap.containsKey(word)) {
+                final List<Character> vowels = wordMap.get(word);
+                buildWordMap(word.length(), vowels.size(), new HashSet<>(wordMap.get(word)).toString());
+            } else {
+                final List<Character> vowels = vowelsInWord(word);
+                wordMap.put(word, vowels);
+                buildWordMap(word.length(), vowels.size(), new HashSet<>(vowels).toString());
+            }
         });
         return wordCountMap;
     }
